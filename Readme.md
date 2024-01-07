@@ -180,3 +180,43 @@ docker-compose up -d
 
 Esto descargará las imágenes necesarias, creará y ejecutará los contenedores según la configuración proporcionada. Después de que los contenedores estén en funcionamiento, podrás acceder a MongoDB a través del puerto 27017 y a Mongo Express a través del puerto 8081 en tu máquina local.
 
+## Conexión interactiva a MongoDB
+
+Aunque por lo general no usaremos MongoDB en modo interactivo, para ver algunos ejemplos 
+
+1. **Iniciar el shell interactivo:**
+   Abre tu terminal y ejecuta el comando `mongo` para ingresar al shell interactivo de MongoDB.
+
+2. **Crear un documento (Create):**
+   Para insertar un nuevo documento en una colección llamada `alumnos`, puedes utilizar el siguiente comando:
+
+   ```javascript
+   db.alumnos.insertOne({ nombre: "Juan Perez", edad: 20, carrera: "Ingeniería Informática" })
+   ```
+
+3. **Leer documentos (Read):**
+   Para recuperar todos los documentos de la colección `alumnos`, puedes usar el comando `find()`:
+
+   ```javascript
+   db.alumnos.find()
+   ```
+
+   Esto mostrará todos los documentos que representan a los alumnos.
+
+4. **Actualizar un documento (Update):**
+   Para actualizar un documento, puedes utilizar el comando `updateOne()`. Supongamos que Juan Pérez cambió su carrera a "Ingeniería Eléctrica":
+
+   ```javascript
+   db.alumnos.updateOne({ nombre: "Juan Perez" }, { $set: { carrera: "Ingeniería Eléctrica" } })
+   ```
+
+   Esto actualiza el documento de Juan Pérez con la nueva información sobre su carrera.
+
+5. **Eliminar un documento (Delete):**
+   Para eliminar un documento, puedes utilizar el comando `deleteOne()`. Supongamos que Juan Pérez ya no es alumno:
+
+   ```javascript
+   db.alumnos.deleteOne({ nombre: "Juan Perez" })
+   ```
+   
+   Esto eliminará el documento que representa a Juan Pérez de la colección.
