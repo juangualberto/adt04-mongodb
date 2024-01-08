@@ -1,7 +1,7 @@
 
 # Planteamiento del proyecto
 
-El presente proyecto forma parte de una de las tareas de  la asignatura de Acceso a Datos del Ciclo Formativo de Grado Superior de Desarrollo de Aplicaciones Multiplataforma. Con este proyecto aprenderemos los contenidos del tema.
+El presente proyecto forma parte de una de las tareas de  la asignatura de Acceso a Datos del Ciclo Formativo de Grado Superior de Desarrollo de Aplicaciones Multiplataforma. Con este proyecto aprenderemos los contenidos del tema, en nuestro caso desarrollar una aplicación con NodeJS, Express, PUG y MongoDB.
 
 ## Introducción a la tarea
 
