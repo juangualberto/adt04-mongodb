@@ -95,7 +95,10 @@ Esto descargará las imágenes necesarias, creará y ejecutará los contenedores
 Aunque por lo general no usaremos MongoDB en modo interactivo, para ver algunos ejemplos 
 
 1. **Iniciar el shell interactivo:**
-   Abre tu terminal y ejecuta el comando `mongo` para ingresar al shell interactivo de MongoDB.
+   Abre tu terminal y ejecuta los siguientes comandos:
+   1. `docker exec -ti stack-mongo_mongo_1 /bin/bash`: para abrir una terminal interactiva en el contenedor de nuestro servicio **mongo**.
+   2. `mongosh -u root -p`: para ingresar al shell interactivo de MongoDB, la contraseña es *83uddjfp0cmMD*, como fijamos en el docker-compose.
+   3. `use('GestionAcademica')`: desde la shell de mongo, indicamos qué base de datos queremos usar de esta manera.
 
 2. **Crear un documento (Create):**
    Para insertar un nuevo documento en una colección llamada `alumnos`, puedes utilizar el siguiente comando:
