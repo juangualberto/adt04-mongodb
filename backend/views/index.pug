@@ -1,0 +1,28 @@
+html
+head
+  title Login y Registro
+body
+  h1 Bienvenido, #{currentUser ? currentUser.username : 'Invitado'}
+
+  if !currentUser
+    h2 Iniciar Sesión
+    form(action='/auth/login', method='POST')
+      label(for='username') Usuario:
+      input(type='text', name='username', required)
+      br
+      label(for='password') Contraseña:
+      input(type='password', name='password', required)
+      br
+      input(type='submit', value='Iniciar Sesión')
+
+    h2 Registrarse
+    form(action='/auth/register', method='POST')
+      label(for='username') Usuario:
+      input(type='text', name='username', required)
+      br
+      label(for='password') Contraseña:
+      input(type='password', name='password', required)
+      br
+      input(type='submit', value='Registrarse')
+  else
+    a(href='/auth/logout') Cerrar Sesión

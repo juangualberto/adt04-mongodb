@@ -15,23 +15,39 @@ Vamos a comenzar nuestro proyecto con el sistema de Login. Creamos una carpeta `
    Instala las dependencias necesarias: Express, Mongoose para interactuar con MongoDB, Bcrypt para el cifrado de contraseñas y Pug para las plantillas.
 
    ```bash
-   npm install express mongoose bcrypt pug
+   npm install express express-session mongoose bcrypt pug
    ```
 
-3. **Configurar la Aplicación Express:**
-   Crea un archivo `app.js` (o cualquier nombre que prefieras) y configura tu aplicación Express:
+3. **Configurar la Aplicación y el middleware para la gestión de sesiones:**
+   Crea un archivo `app.js` (o cualquier nombre que prefieras) y configura tu aplicación Express y Express-Session:
 
    ```javascript
         const express = require('express');
         const mongoose = require('mongoose');
         const bcrypt = require('bcrypt');
         const app = express();
+        const session = require('express-session');
         // para cargar configuración de la APP desde .env
         const dotenv = require('dotenv');
+        // sistema de login y registro
+        const authRoutes = require('./routes/auth');
 
         app.set('view engine', 'pug');
         app.use(express.urlencoded({ extended: true }));
         app.use(express.static('public'));
+
+        // Configuración middleware express-session
+        app.use(session({
+            secret: 'unsupersecretoinconfesable',
+            resave: true,
+            saveUninitialized: false
+          }));
+
+        // Middleware para pasar información de sesión a las vistas
+        app.use((req, res, next) => {
+            res.locals.currentUser = req.session.user;
+            next();
+          });
 
         // cargamos configuración desde .env
         dotenv.config();
@@ -68,90 +84,122 @@ Vamos a comenzar nuestro proyecto con el sistema de Login. Creamos una carpeta `
    Crea un archivo `routes/auth.js` para manejar las rutas relacionadas con la autenticación:
 
    ```javascript
-   const express = require('express');
-   const router = express.Router();
-   const bcrypt = require('bcrypt');
-   const User = require('../models/User');
+      const express = require('express');
+      const router = express.Router();
+      const bcrypt = require('bcrypt');
+      const User = require('../models/User');
 
-   router.get('/login', (req, res) => {
-     res.render('login');
-   });
+      router.get("/", (req, res) =>{
+          res.render('index');
+      });
 
-   router.post('/login', async (req, res) => {
-     const { username, password } = req.body;
+      router.get('/login', (req, res) => {
+          res.render('login');
+      });
 
-     const user = await User.findOne({ username });
+      router.post('/login', async (req, res) => {
+          const { username, password } = req.body;
 
-     if (user && bcrypt.compareSync(password, user.password)) {
-       res.send('Inicio de sesión exitoso');
-     } else {
-       res.send('Credenciales incorrectas');
-     }
-   });
+          const user = await User.findOne({ username });
 
-   router.get('/register', (req, res) => {
-     res.render('register');
-   });
+          if (user && bcrypt.compareSync(password, user.password)) {
+              req.session.user = user; // Almacenamos el usuario en la sesión
+              res.send('Inicio de sesión exitoso');
+          } else {
+              res.send('Credenciales incorrectas');
+          }
+      });
 
-   router.post('/register', async (req, res) => {
-     const { username, password } = req.body;
+      router.get('/register', (req, res) => {
+          res.render('register');
+      });
 
-     const hashedPassword = bcrypt.hashSync(password, 10);
+      router.post('/register', async (req, res) => {
+          const { username, password } = req.body;
 
-     const newUser = new User({ username, password: hashedPassword });
+          const hashedPassword = bcrypt.hashSync(password, 10);
 
-     try {
-       await newUser.save();
-       res.send('Usuario registrado exitosamente');
-     } catch (error) {
-       res.send('Error al registrar el usuario');
-     }
-   });
+          const newUser = new User({ username, password: hashedPassword });
 
-   module.exports = router;
+          try {
+              await newUser.save();
+              res.send('Usuario registrado exitosamente');
+          } catch (error) {
+              res.send('Error al registrar el usuario');
+          }
+      });
+
+      router.get('/logout', (req, res) => {
+          req.session.destroy();
+          res.redirect('/auth');
+        });
+
+      module.exports = router;
+
    ```
 
 6. **Vistas Pug:**
-   Crea las vistas Pug en la carpeta `views`. Puedes tener archivos como `login.pug` y `register.pug`. Aquí tienes un ejemplo simple de `login.pug`:
+   Crea las vistas Pug en la carpeta `views`. Puedes tener archivos como `login.pug` y `register.pug`. Aquí tienes un ejemplo simple de `index.pug`:
 
    ```pug
-   html
-   head
-     title Login
-   body
-     h1 Iniciar Sesión
-     form(action='/login', method='POST')
-       label(for='username') Usuario:
-       input(type='text', name='username', required)
-       br
-       label(for='password') Contraseña:
-       input(type='password', name='password', required)
-       br
-       input(type='submit', value='Iniciar Sesión')
+      html
+        head
+          title Login y Registro
+        body
+          h1 Bienvenido, #{currentUser ? currentUser.username : 'Invitado'}
+
+          if !currentUser
+            h2 Iniciar Sesión
+            form(action='/auth/login', method='POST')
+              label(for='username') Usuario:
+              input(type='text', name='username', required)
+              br
+              label(for='password') Contraseña:
+              input(type='password', name='password', required)
+              br
+              input(type='submit', value='Iniciar Sesión')
+
+            h2 Registrarse
+            form(action='/auth/register', method='POST')
+              label(for='username') Usuario:
+              input(type='text', name='username', required)
+              br
+              label(for='password') Contraseña:
+              input(type='password', name='password', required)
+              br
+              input(type='submit', value='Registrarse')
+          else
+            a(href='/auth/logout') Cerrar Sesión
+
    ```
 
-   Repite un proceso similar para la vista `register.pug`.
+   Puedes usar código de este `index` para la vista `login.pug` y `register.pug`.
 
 7. **Configurar Rutas en la Aplicación Principal:**
    Modifica `app.js` para utilizar las rutas que hemos definido:
 
    ```javascript
-   const authRoutes = require('./routes/auth');
 
-   app.use('/auth', authRoutes);
+      // configuramos rutas
 
-   app.listen(8000, () => {
-     console.log('Servidor en funcionamiento en el puerto 8000');
-   });
+      app.use('/auth', authRoutes);
+
+      app.use('/', (req, res) => {
+          res.redirect('/auth');
+      });
+
+      app.listen(process.env.BACKEND_PORT, () => {
+          console.log(`Servidor en funcionamiento en el puerto ${process.env.BACKEND_PORT}`);
+      });
    ```
 
    Aquí, las rutas de autenticación estarán bajo la ruta `/auth`.
 
-8. **Ejecutar la Aplicación:**
+1. **Ejecutar la Aplicación:**
    Ejecuta tu aplicación con:
 
    ```bash
-   node app.js
+    node app.js
    ```
 
    Visita `http://localhost:8000/auth/login` para ver la página de inicio de sesión.
