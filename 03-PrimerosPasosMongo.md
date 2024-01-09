@@ -92,7 +92,9 @@ Esto descargará las imágenes necesarias, creará y ejecutará los contenedores
 
 ## Conexión interactiva a MongoDB
 
-Aunque por lo general no usaremos MongoDB en modo interactivo, para ver algunos ejemplos 
+Aunque por lo general no usaremos MongoDB en modo interactivo, vamos a ver algunos ejemplos de cómo interactuar con la shell de mongo (mongosh):
+
+![Ejemplo de conexión en modo interactivo.](docs/mongodbinteractivo.png)
 
 1. **Iniciar el shell interactivo:**
    Abre tu terminal y ejecuta los siguientes comandos:
