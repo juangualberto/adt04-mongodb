@@ -1,5 +1,18 @@
 # Bases de datos documentales
 
+Este repositorio está estructurado de la siguiente manera:
+
+* Carpeta `backend`: contiene el código fuente para NodeJS de la aplicación, dentro, a su vez, en subcarpetas tenemos:
+  * `models`: Modelos de datos
+  * `public`: Carpeta pública con contenido estático (CSS, JS, IMG, etc.)
+  * `routes`: Carpeta con las rutas.
+  * `views`: Carpeta con las vistas.
+  * Fichero `.env`: Configuración. **NUNCA** debe subirse al repositorio, debe ser secreto, debería estar en el **.gitignore**.
+  * Fichero `app.js`: Aplicación de NodeJS.
+  * Fichero `package.json`: Dependencias del proyecto. La primera vez tendrás que hacer npm install desde esta carpeta `backend`.
+* Carpeta `docs`: Documentación, imágenes, etc.
+* Carpeta `stack-mongo`: Archivos docker-compose para dar de alta los servicios para que funcione la aplicación.
+
 Las bases de datos documentales son un tipo de sistema de gestión de bases de datos (SGBD) que se centra en el almacenamiento y recuperación de datos en formato de documentos. En lugar de organizar la información en tablas como en las bases de datos relacionales, las bases de datos documentales utilizan documentos, que pueden ser en formatos como JSON (JavaScript Object Notation) o BSON (Binary JSON). Cada documento puede contener datos estructurados y no estructurados, lo que proporciona flexibilidad en la representación de la información.
 
 Mientras que las bases de datos relacionales están más recomendadas a casos en los que hay mucha rotación de datos, las documentales se recomiendan para los casos donde hay pocas o nulas actualizaciones.

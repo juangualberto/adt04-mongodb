@@ -15,7 +15,7 @@ Vamos a comenzar nuestro proyecto con el sistema de Login. Creamos una carpeta `
    Instala las dependencias necesarias: Express, Mongoose para interactuar con MongoDB, Bcrypt para el cifrado de contraseñas y Pug para las plantillas.
 
    ```bash
-   npm install express express-session mongoose bcrypt pug
+   npm install express express-session mongoose bcrypt pug dotenv
    ```
 
 3. **Configurar la Aplicación y el middleware para la gestión de sesiones:**
